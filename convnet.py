@@ -47,3 +47,12 @@ def get_convnet_model():
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categorical_accuracy'])
 
     return model
+
+
+def main():
+    model = get_convnet_model()
+    model.save('my_model.h5')
+
+
+if __name__ == '__main__':
+    main()

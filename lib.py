@@ -3,10 +3,10 @@ from collections import namedtuple
 import tensorflow
 from keras import backend
 from keras.metrics import categorical_accuracy
+from keras.models import load_model
 from sklearn.model_selection import train_test_split
 
 
-from convnet import get_convnet_model
 from loadmat import my_loadmat
 
 
@@ -29,12 +29,12 @@ def train_convnet(model, d, nb_epoch):
     model.fit(train_data_X, train_data_y, nb_epoch=nb_epoch, validation_data=(test_data_X, test_data_y))
 
 
-def main():
+def main(nb_epoch):
     b = load_batch(1)
     image = b.image.reshape(-1, 40, 40, 1)
     d = train_test_split(image, b.label_one_of_n, test_size=0.1, random_state=42)
-    model = get_convnet_model()
-    train_convnet(model, d, 10)
+    model = load_model("my_model.h5")
+    train_convnet(model, d, nb_epoch)
     model.save('my_model.h5')
 
     train_x, test_x, train_y, test_y = d
@@ -53,4 +53,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    main(int(sys.argv[1]))
