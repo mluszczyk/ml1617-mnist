@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 import tensorflow
+from keras import backend
 from keras.metrics import categorical_accuracy
 from sklearn.model_selection import train_test_split
 
@@ -33,20 +34,22 @@ def main():
     image = b.image.reshape(-1, 40, 40, 1)
     d = train_test_split(image, b.label_one_of_n, test_size=0.1, random_state=42)
     model = get_convnet_model()
-    train_convnet(model, d, 3)
+    train_convnet(model, d, 10)
+    model.save('my_model.h5')
 
-    test_x, _, test_y, _ = d
-    test_x, test_y = test_x, test_y
+    train_x, test_x, train_y, test_y = d
+
+    pred_y = model.predict(train_x)
+    acc_computation = categorical_accuracy(
+        tensorflow.convert_to_tensor(train_y), tensorflow.convert_to_tensor(pred_y))
+    acc = acc_computation.eval(session=backend.get_session())
+    print("train acc", acc)
+
     pred_y = model.predict(test_x)
-
-    from keras import backend
     acc_computation = categorical_accuracy(
         tensorflow.convert_to_tensor(test_y), tensorflow.convert_to_tensor(pred_y))
     acc = acc_computation.eval(session=backend.get_session())
-    print(acc)
-
-    print(test_y[3])
-    print(pred_y[3])
+    print("test acc", acc)
 
 
 if __name__ == '__main__':

@@ -44,6 +44,6 @@ def get_convnet_model():
     model.add(Activation('softmax'))
     print(model.output_shape)
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categorical_accuracy'])
 
     return model

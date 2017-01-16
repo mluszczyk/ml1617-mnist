@@ -9,6 +9,7 @@ bleach==1.5.0             # via nbconvert
 cycler==0.10.0            # via matplotlib
 decorator==4.0.11         # via ipython, traitlets
 entrypoints==0.2.2        # via nbconvert
+h5py==2.6.0
 html5lib==0.9999999       # via bleach
 ipykernel==4.5.2          # via ipywidgets, jupyter, jupyter-console, notebook, qtconsole
 ipython-genutils==0.1.0   # via nbformat, notebook, traitlets
@@ -27,7 +28,7 @@ mistune==0.7.3            # via nbconvert
 nbconvert==5.0.0          # via jupyter, notebook
 nbformat==4.2.0           # via nbconvert, notebook
 notebook==4.3.1           # via jupyter, widgetsnbextension
-numpy==1.12.0             # via matplotlib, scipy, tensorflow, tensorflow-gpu, theano
+numpy==1.12.0             # via h5py, matplotlib, scipy, tensorflow, tensorflow-gpu, theano
 pandocfilters==1.4.1      # via nbconvert
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
@@ -44,7 +45,7 @@ qtconsole==4.2.1          # via jupyter
 scikit-learn==0.18.1      # via sklearn
 scipy==0.18.1
 simplegeneric==0.8.1      # via ipython
-six==1.10.0               # via bleach, cycler, html5lib, keras, prompt-toolkit, protobuf, python-dateutil, tensorflow, tensorflow-gpu, theano, traitlets
+six==1.10.0               # via bleach, cycler, h5py, html5lib, keras, prompt-toolkit, protobuf, python-dateutil, tensorflow, tensorflow-gpu, theano, traitlets
 sklearn==0.0
 tensorflow-gpu==0.12.1
 tensorflow==0.12.1
