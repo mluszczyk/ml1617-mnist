@@ -14,26 +14,27 @@ def get_convnet_model():
 
     nb_conv = 3
 
-    model.add(Convolution2D(16, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
-    assert model.output_shape == (None, 20, 20, 16)
-
+    model.add(Convolution2D(32, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    assert model.output_shape == (None, 20, 20, 16)
+    assert model.output_shape == (None, 20, 20, 32)
 
-    model.add(Convolution2D(16, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
-    assert model.output_shape == (None, 10, 10, 16)
-
+    model.add(Convolution2D(32, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    assert model.output_shape == (None, 10, 10, 16)
+    assert model.output_shape == (None, 10, 10, 32)
+
+    model.add(Convolution2D(32, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    assert model.output_shape == (None, 5, 5, 32)
 
     model.add(Convolution2D(10, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    assert model.output_shape == (None, 5, 5, 10)
+    assert model.output_shape == (None, 3, 3, 10)
 
-    model.add(AveragePooling2D(pool_size=(5, 5)))
+    model.add(AveragePooling2D(pool_size=(3, 3)))
     assert model.output_shape == (None, 1, 1, 10)
 
     model.add(Flatten())
