@@ -26,7 +26,7 @@ def train_convnet(model, d, nb_epoch):
 
     print("train convnet")
     print(len(train_data_X), train_data_y[0], train_data_y[-1])
-    model.fit(train_data_X, train_data_y, nb_epoch=nb_epoch)
+    model.fit(train_data_X, train_data_y, nb_epoch=nb_epoch, validation_data=(test_data_X, test_data_y))
 
 
 def main():
