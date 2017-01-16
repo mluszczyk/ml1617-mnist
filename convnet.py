@@ -9,40 +9,36 @@ def get_convnet_model():
     model = Sequential()
 
     model.add(BatchNormalization(input_shape=input_shape))
-    print(model.output_shape)
+
+    assert model.output_shape == (None, 40, 40, 1)
 
     nb_conv = 3
 
-    # model.add(Dropout(0.2))
-
     model.add(Convolution2D(16, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
-    print(model.output_shape)
+    assert model.output_shape == (None, 20, 20, 16)
+
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    print(model.output_shape)
-
-    # model.add(Dropout(0.5))
+    assert model.output_shape == (None, 20, 20, 16)
 
     model.add(Convolution2D(16, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
-    print(model.output_shape)
+    assert model.output_shape == (None, 10, 10, 16)
+
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    print(model.output_shape)
-
-    model.add(AveragePooling2D(pool_size=(5, 5)))
-
-    # model.add(Dropout(0.5))
+    assert model.output_shape == (None, 10, 10, 16)
 
     model.add(Convolution2D(10, nb_conv, nb_conv, border_mode='same', subsample=(2, 2)))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    print(model.output_shape)
+    assert model.output_shape == (None, 5, 5, 10)
 
-    # model.add(Dropout(0.5))
+    model.add(AveragePooling2D(pool_size=(5, 5)))
+    assert model.output_shape == (None, 1, 1, 10)
 
     model.add(Flatten())
     model.add(Activation('softmax'))
-    print(model.output_shape)
+    assert model.output_shape == (None, 10)
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categorical_accuracy'])
 
