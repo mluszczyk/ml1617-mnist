@@ -34,10 +34,10 @@ def get_convnet_model():
     model.add(Activation('relu'))
     assert model.output_shape == (None, 3, 3, 10)
 
-    model.add(AveragePooling2D(pool_size=(3, 3)))
-    assert model.output_shape == (None, 1, 1, 10)
-
     model.add(Flatten())
+    assert model.output_shape == (None, 90)
+
+    model.add(Dense(10))
     model.add(Activation('softmax'))
     assert model.output_shape == (None, 10)
 
