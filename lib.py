@@ -1,3 +1,4 @@
+import json
 from collections import namedtuple
 
 import tensorflow
@@ -26,7 +27,7 @@ def train_convnet(model, d, nb_epoch):
 
     print("train convnet")
     print(len(train_data_X), train_data_y[0], train_data_y[-1])
-    model.fit(train_data_X, train_data_y, nb_epoch=nb_epoch, validation_data=(test_data_X, test_data_y))
+    return model.fit(train_data_X, train_data_y, nb_epoch=nb_epoch, validation_data=(test_data_X, test_data_y))
 
 
 def main(nb_epoch):
@@ -34,7 +35,9 @@ def main(nb_epoch):
     image = b.image.reshape(-1, 40, 40, 1)
     d = train_test_split(image, b.label_one_of_n, test_size=0.1, random_state=42)
     model = load_model("my_model.h5")
-    train_convnet(model, d, nb_epoch)
+    hist = train_convnet(model, d, nb_epoch)
+    with open("my_hist.json", "w") as f:
+        json.dump(hist.history, f)
     model.save('my_model.h5')
 
     train_x, test_x, train_y, test_y = d
