@@ -46,7 +46,7 @@ def combine_history(old_hist, history):
     }
 
 
-def main(nb_epoch):
+def perform_training(nb_epoch):
     b = load_batch(1)
     image = b.image.reshape(-1, 40, 40, 1)
     d = train_test_split(image, b.label_one_of_n, test_size=0.1, random_state=42)
@@ -76,8 +76,3 @@ def main(nb_epoch):
         tensorflow.convert_to_tensor(test_y), tensorflow.convert_to_tensor(pred_y))
     acc = acc_computation.eval(session=backend.get_session())
     print("test acc", acc)
-
-
-if __name__ == '__main__':
-    import sys
-    main(int(sys.argv[1]))
