@@ -8,6 +8,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
 
+from lib import remove_history
+
 
 def get_mnist_demo_model():
     nb_classes = 10
@@ -48,10 +50,10 @@ def get_mnist_demo_model():
     return model
 
 
-
 def main():
     model = get_mnist_demo_model()
     model.save('my_model.h5')
+    remove_history()
 
 
 if __name__ == '__main__':

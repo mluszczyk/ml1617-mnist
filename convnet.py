@@ -1,8 +1,12 @@
+import os
+
 from keras.models import Sequential
 from keras.layers import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.layers import Reshape, BatchNormalization
 from keras.regularizers import l2
+
+from lib import remove_history
 
 
 def get_convnet_model():
@@ -50,7 +54,7 @@ def get_convnet_model():
 def main():
     model = get_convnet_model()
     model.save('my_model.h5')
-
+    remove_history()
 
 if __name__ == '__main__':
     main()
