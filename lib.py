@@ -2,6 +2,7 @@ import json
 import os
 from collections import namedtuple
 
+import numpy
 import tensorflow
 from keras import backend
 from keras.metrics import categorical_accuracy
@@ -46,10 +47,33 @@ def combine_history(old_hist, history):
     }
 
 
-def perform_training(nb_epoch):
-    b = load_batch(1)
-    image = b.image.reshape(-1, 40, 40, 1)
-    d = train_test_split(image, b.label_one_of_n, test_size=0.1, random_state=42)
+def load_data(batch_start, batch_end):
+    batches = []
+    for batch_num in range(batch_start, batch_end):
+        b = load_batch(batch_num)
+        tup = (
+            b.image.reshape(-1, 40, 40, 1),
+            b.label_one_of_n
+        )
+        batches.append(tup)
+    return batches
+
+
+def train_test_batch_split(batches, test_size, random_state):
+    split_by_batch = ([], [], [], [])
+    for batch in batches:
+        b_split = train_test_split(
+            batch[0], batch[1], test_size=test_size, random_state=random_state)
+        for l, b in zip(split_by_batch, b_split):
+            l.append(b)
+    final = tuple(numpy.concatenate(b) for b in split_by_batch)
+    return final
+
+
+def perform_training(batch_start, batch_end, nb_epoch):
+    batches = load_data(batch_start, batch_end)
+    d = train_test_batch_split(batches, 0.1, 42)
+
     model = load_model("my_model.h5")
     try:
         with open("my_hist.json", "r") as f:
