@@ -6,6 +6,7 @@ import numpy
 import pandas
 import tensorflow
 from keras import backend
+from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.metrics import categorical_accuracy
 from keras.models import load_model
 from numpy.testing import assert_array_equal
@@ -38,8 +39,10 @@ def train_convnet(model, d, nb_epoch, prev_epochs):
     print("train convnet")
     print(len(train_data_X), train_data_y[0], train_data_y[-1])
     return model.fit(
-        train_data_X, train_data_y, nb_epoch=nb_epoch, validation_data=(test_data_X, test_data_y),
-        initial_epoch=prev_epochs)
+        train_data_X, train_data_y, nb_epoch=nb_epoch + prev_epochs, validation_data=(test_data_X, test_data_y),
+        initial_epoch=prev_epochs,
+        callbacks=[TensorBoard(),
+                   ModelCheckpoint("model-checkpoint.h5py", save_best_only=True, monitor='val_categorical_accuracy')])
 
 
 def combine_history(old_hist, history):
