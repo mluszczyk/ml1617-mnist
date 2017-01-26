@@ -8,6 +8,7 @@ import tensorflow
 from keras import backend
 from keras.metrics import categorical_accuracy
 from keras.models import load_model
+from numpy.testing import assert_array_equal
 from sklearn.model_selection import train_test_split
 
 from loadmat import my_loadmat
@@ -70,7 +71,7 @@ def train_test_batch_split(batches, test_size, random_state):
     return final
 
 
-def perform_training(batch_start, batch_end, nb_epoch):
+def perform_training(batch_start, batch_end, nb_epoch, preprocessing):
     batches = load_data(batch_start, batch_end)
     d = train_test_batch_split(batches, 0.1, 42)
 
@@ -81,13 +82,19 @@ def perform_training(batch_start, batch_end, nb_epoch):
     except OSError:
         old_hist = {"val_categorical_accuracy": [], "categorical_accuracy": [], "loss": [], "val_loss": []}
     prev_epochs = len(old_hist['loss'])
+
+    train_x, test_x, train_y, test_y = d
+
+    train_x = preprocessing(train_x)
+    test_x = preprocessing(test_x)
+
+    d = (train_x, test_x, train_y, test_y)
+
     hist = train_convnet(model, d, nb_epoch, prev_epochs=prev_epochs)
     history = combine_history(old_hist, hist.history)
     with open("my_hist.json", "w") as f:
         json.dump(history, f)
     model.save('my_model.h5')
-
-    train_x, test_x, train_y, test_y = d
 
     pred_y = model.predict(train_x)
     acc_computation = categorical_accuracy(
@@ -103,14 +110,18 @@ def perform_training(batch_start, batch_end, nb_epoch):
 
 
 def getbbox(img):
+    assert img.shape == (40, 40)
     a = numpy.where(img.max(axis=0) > 0)[0], numpy.where(img.max(axis=1) > 0)[0]
-    crop_box = (min(a[1]), max(a[1]), min(a[0]), max(a[0]))
+    crop_box = (min(a[1]), max(a[1]) + 1, min(a[0]), max(a[0]) + 1)
     return crop_box
 
 
 def autocrop(img):
+    assert img.shape == (40, 40)
     crop_box = getbbox(img)
-    return img[crop_box[0]:crop_box[1] + 1, crop_box[2]:crop_box[3] + 1]
+    img = img[crop_box[0]:crop_box[1], crop_box[2]:crop_box[3]]
+    assert_array_equal(img.shape, (crop_box[1] - crop_box[0], crop_box[3] - crop_box[2]))
+    return img
 
 
 def imshow(image):
@@ -137,8 +148,31 @@ def calculate_padding(expected, actual):
     return a, b
 
 
-def center(img, expected_size=(32, 32)):
+def center(img):
+    expected_size = (34, 34)
+    assert img.shape == (40, 40)
     img = autocrop(img)
     shape = img.shape
+    assert shape[0] <= expected_size[0] and shape[1] <= expected_size[1], "Got shape: {}".format(shape)
     a, b = calculate_padding(expected_size[0], shape[0]), calculate_padding(expected_size[1], shape[1])
     return numpy.pad(img, (a, b), 'constant')
+
+center = numpy.vectorize(center, signature='(n,n)->(k,k)')
+
+
+def apply_by_row(func, array):
+    stuff = []
+    for row in array:
+        stuff.append(func(row))
+    return numpy.array(stuff)
+
+
+def array_center(array):
+    assert array.shape[1:] == (40, 40, 1)
+    return apply_by_row(center, array.reshape(-1, 40, 40)).reshape(-1, 34, 34, 1)
+
+
+preprocessing_map = {
+    "id": lambda x: x,
+    "center": array_center
+}

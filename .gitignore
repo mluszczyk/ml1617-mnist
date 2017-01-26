@@ -3,3 +3,4 @@ __pycache__
 my_model.h5
 my_hist.json
 model-*/
+*.npy
