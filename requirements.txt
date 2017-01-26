@@ -23,14 +23,15 @@ jupyter-console==5.0.0    # via jupyter
 jupyter-core==4.2.1       # via jupyter-client, nbconvert, nbformat, notebook, qtconsole
 jupyter==1.0.0
 keras==1.2.1
-MarkupSafe==0.23          # via jinja2
+markupsafe==0.23          # via jinja2
 matplotlib==2.0.0
 mistune==0.7.3            # via nbconvert
 nbconvert==5.1.1          # via jupyter, notebook
 nbformat==4.2.0           # via nbconvert, notebook
 notebook==4.3.1           # via jupyter, widgetsnbextension
-numpy==1.12.0             # via h5py, matplotlib, scipy, tensorflow, tensorflow-gpu, theano
+numpy==1.12.0             # via h5py, matplotlib, pandas, scipy, tensorflow, tensorflow-gpu, theano
 packaging==16.8           # via setuptools
+pandas==0.19.2
 pandocfilters==1.4.1      # via nbconvert
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
@@ -39,8 +40,8 @@ protobuf==3.1.0.post1     # via tensorflow, tensorflow-gpu
 ptyprocess==0.5.1         # via pexpect, terminado
 pygments==2.2.0           # via ipython, jupyter-console, nbconvert, qtconsole
 pyparsing==2.1.10         # via matplotlib, packaging
-python-dateutil==2.6.0    # via matplotlib
-pytz==2016.10             # via matplotlib
+python-dateutil==2.6.0    # via matplotlib, pandas
+pytz==2016.10             # via matplotlib, pandas
 pyyaml==3.12              # via keras
 pyzmq==16.0.2             # via jupyter-client
 qtconsole==4.2.1          # via jupyter

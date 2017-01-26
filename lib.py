@@ -3,12 +3,12 @@ import os
 from collections import namedtuple
 
 import numpy
+import pandas
 import tensorflow
 from keras import backend
 from keras.metrics import categorical_accuracy
 from keras.models import load_model
 from sklearn.model_selection import train_test_split
-
 
 from loadmat import my_loadmat
 
@@ -100,3 +100,45 @@ def perform_training(batch_start, batch_end, nb_epoch):
         tensorflow.convert_to_tensor(test_y), tensorflow.convert_to_tensor(pred_y))
     acc = acc_computation.eval(session=backend.get_session())
     print("test acc", acc)
+
+
+def getbbox(img):
+    a = numpy.where(img.max(axis=0) > 0)[0], numpy.where(img.max(axis=1) > 0)[0]
+    crop_box = (min(a[1]), max(a[1]), min(a[0]), max(a[0]))
+    return crop_box
+
+
+def autocrop(img):
+    crop_box = getbbox(img)
+    return img[crop_box[0]:crop_box[1] + 1, crop_box[2]:crop_box[3] + 1]
+
+
+def imshow(image):
+    from matplotlib import pyplot
+    pyplot.imshow(image, cmap='gray')
+
+
+def make_submission(model):
+    with open("data/submission.csv", "w") as f:
+        f.write("Id,Label\n")
+        for chunk in pandas.read_csv("data/test.csv", chunksize=10000):
+            chunk = chunk.as_matrix()
+            labels = chunk[:, 0]
+            images = chunk[:, 1:].reshape(-1, 40, 40, 1)
+            answers = model.predict_classes(images)
+            for x, y in zip(labels, answers):
+                f.write("{},{}\n".format(x, y))
+
+
+def calculate_padding(expected, actual):
+    a = (expected - actual) // 2
+    b = (expected - actual + 1) // 2
+    assert a + actual + b == expected
+    return a, b
+
+
+def center(img, expected_size=(32, 32)):
+    img = autocrop(img)
+    shape = img.shape
+    a, b = calculate_padding(expected_size[0], shape[0]), calculate_padding(expected_size[1], shape[1])
+    return numpy.pad(img, (a, b), 'constant')
