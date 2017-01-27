@@ -10,6 +10,7 @@ bleach==1.5.0             # via nbconvert
 cycler==0.10.0            # via matplotlib
 decorator==4.0.11         # via ipython, traitlets
 entrypoints==0.2.2        # via nbconvert
+graphviz==0.5.2
 h5py==2.6.0
 html5lib==0.9999999       # via bleach
 ipykernel==4.5.2          # via ipywidgets, jupyter, jupyter-console, notebook, qtconsole
@@ -38,8 +39,9 @@ pickleshare==0.7.4        # via ipython
 prompt-toolkit==1.0.9     # via ipython, jupyter-console
 protobuf==3.1.0.post1     # via tensorflow, tensorflow-gpu
 ptyprocess==0.5.1         # via pexpect, terminado
+pydot-ng==1.0.0
 pygments==2.2.0           # via ipython, jupyter-console, nbconvert, qtconsole
-pyparsing==2.1.10         # via matplotlib, packaging
+pyparsing==2.1.10         # via matplotlib, packaging, pydot-ng
 python-dateutil==2.6.0    # via matplotlib, pandas
 pytz==2016.10             # via matplotlib, pandas
 pyyaml==3.12              # via keras

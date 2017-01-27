@@ -1,10 +1,12 @@
 h5py
 ipython
 jupyter
+graphviz
 keras
 matplotlib
-tensorflow
-tensorflow-gpu
 pandas
+pydot-ng
 scipy
 sklearn
+tensorflow
+tensorflow-gpu
